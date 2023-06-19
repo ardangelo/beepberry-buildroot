@@ -9,5 +9,6 @@ initial_turbo=30
 disable_splash=1
 dtoverlay=disable-bt
 boot_delay=0
-dtoverlay=sharp
+dtoverlay=sharp_drm
 dtparam=spi=on
+dtoverlay=i2c-bbqX0kbd,irq_pin=4
