@@ -1,0 +1,6 @@
+[submodule "bb_drivers/package/sharp_drm/src"]
+	path = bb_drivers/package/sharp_drm/src
+	url = git@github.com:ardangelo/sharp-drm-driver.git
+[submodule "bb_drivers/package/bbqX0kbd/src"]
+	path = bb_drivers/package/bbqX0kbd/src
+	url = git@github.com:ardangelo/beepberry-keyboard-driver.git

@@ -12,3 +12,4 @@ boot_delay=0
 dtoverlay=sharp_drm
 dtparam=spi=on
 dtoverlay=i2c-bbqX0kbd,irq_pin=4
+dtparam=i2c_arm=on
