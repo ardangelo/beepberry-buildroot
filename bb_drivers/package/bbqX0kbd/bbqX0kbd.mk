@@ -11,6 +11,11 @@ define BBQX0KBD_BUILD_CMDS
 	done
 endef
 
+define BBQX0KBD_INSTALL_TARGET_CMDS
+	$(INSTALL) -D -m 0644 $(@D)/src/source/mod_src/bbqX0kbd.map $(TARGET_DIR)/usr/share/keymaps/;
+	$(INSTALL) -D -m 0755 $(@D)/S01bbqX0kbd $(TARGET_DIR)/etc/init.d/;
+endef
+
 define BBQX0KBD_INSTALL_IMAGES_CMDS
 	for dtbo in $(@D)/*.dtbo; do \
 		$(INSTALL) -D -m 0644 $${dtbo} $(BINARIES_DIR)/rpi-firmware/overlays; \
