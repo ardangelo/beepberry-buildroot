@@ -1,5 +1,10 @@
+MODULE_SRC_DIR = src/source/mod_src
+
 obj-m += bbqX0kbd.o
-bbqX0kbd-objs += src/main.o src/input_iface.o src/params_iface.o src/sysfs_iface.o
+bbqX0kbd-objs += $(MODULE_SRC_DIR)/main.o \
+				 $(MODULE_SRC_DIR)/input_iface.o \
+				 $(MODULE_SRC_DIR)/params_iface.o \
+				 $(MODULE_SRC_DIR)/sysfs_iface.o
 ccflags-y := -DDEBUG -g -std=gnu99 -Wno-declaration-after-statement
 
 .PHONY: all clean
