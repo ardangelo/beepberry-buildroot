@@ -12,6 +12,6 @@ fi
 # it's stored in buildroot/output/build/linux-custom/defconfig
 
 cd buildroot
-make -j $(nproc) defconfig BR2_EXTERNAL=../bb_drivers BR2_DEFCONFIG=../br_defconfig
+make -j $(nproc) defconfig BR2_EXTERNAL=../beepy_drivers BR2_DEFCONFIG=../br_defconfig
 make -j $(nproc)
 echo "Image built at buildroot/output/images/sdcard.img"

@@ -1,0 +1,2 @@
+source "$BR2_EXTERNAL_BB_DRIVERS_PATH/package/sharp/Config.in"
+source "$BR2_EXTERNAL_BB_DRIVERS_PATH/package/bbqX0kbd/Config.in"
