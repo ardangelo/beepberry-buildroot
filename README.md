@@ -23,4 +23,4 @@ Next time you build an SD card image, this network will be configured to auto-co
 
 SSH is enabled by default, you can configure WiFi as above to connect remotely to debug.
 
-The username is `beepberry` and the password is `beepbeep`. You should change this from the default using `passwd` as soon as possible for security reasons.
+The username is `beepy` and the password is `beepbeep`. You should change this from the default using `passwd` as soon as possible for security reasons.

@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# First boot setup
+#
+
+umask 077
+
+set -e
+
+# Check in boot partition for initialized flag
+if [ -f /boot/config.txt ] && [ ! -f /boot/home_partition_initialized ]; then
+	echo "Running first boot setup"
+
+	echo "Creating home partition"
+	parted /dev/mmcblk0 resizepart 3 100%
+	mkfs.f2fs -f /dev/mmcblk0p3
+	mkdir -p /home
+	/bin/mount -o defaults,noatime /dev/mmcblk0p3 /home
+	echo "/dev/mmcblk0p3  /home           f2fs    defaults,noatime" >> /etc/fstab
+
+	# Set up user directory
+	mkdir -p /home/beepy
+	chown -R beepy:beepy /home/beepy
+	sed -i 's|:/:|:/home/beepy:|g' /etc/passwd
+
+	echo "Deleting this file will reformat the home partition on next boot" \
+		>> /boot/home_partition_initialized
+
+	echo "Completed first boot setup"
+fi
+
+exit 0
