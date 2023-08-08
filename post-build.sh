@@ -7,7 +7,16 @@ set -e
 if [ -e ${TARGET_DIR}/etc/inittab ]; then
     grep -qE '^tty1::' ${TARGET_DIR}/etc/inittab || \
 	sed -i '/GENERIC_SERIAL/a\
-tty1::respawn:-/bin/sh' ${TARGET_DIR}/etc/inittab
+tty1::respawn:-/bin/login -f beepy' ${TARGET_DIR}/etc/inittab
+fi
+
+# Add user to sudoers
+if [ -e ${TARGET_DIR}/etc/sudoers ]; then
+	if ! grep -qE '^beepy ALL' ${TARGET_DIR}/etc/sudoers; then
+		chmod 700 ${TARGET_DIR}/etc/sudoers
+		echo "beepy ALL=(ALL) NOPASSWD: ALL" >> ${TARGET_DIR}/etc/sudoers
+		chmod 440 ${TARGET_DIR}/etc/sudoers
+	fi
 fi
 
 # Move nonessential init scripts to background
