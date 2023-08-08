@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# Move nonessential init scripts to background
+#
+
+umask 077
+
+SCRIPTS=$(find /etc/init.d/ -type f -regex '.*S[1-9].*')
+
+mkdir -p /etc/init.d/background
+for script in $SCRIPTS; do
+	mv $script /etc/init.d/background
+done
+
+exit 0

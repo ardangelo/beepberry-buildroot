@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# background        Run nonessential init scripts in background
+#
+
+umask 077
+
+echo "Background dispatch started" > /dev/kmsg
+/bin/sh /etc/init.d/run-background.sh $1 & > /dev/kmsg
+echo "Background dispatch completed" > /dev/kmsg
+
+exit $?
+
