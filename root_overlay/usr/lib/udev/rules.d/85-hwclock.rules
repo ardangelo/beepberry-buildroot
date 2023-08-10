@@ -1,0 +1,5 @@
+# Sync hardware clock when it is available from keyboard driver
+# For some reason, hwclock doesn't work during init and needs to run after udev
+KERNEL=="rtc", RUN+="/bin/sh -c 'TZ=$(cat /boot/timezone.txt) \
+	/sbin/hwclock --hctosys -l && /usr/bin/tmux-refresh-status.sh'"
+

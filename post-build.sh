@@ -29,10 +29,7 @@ done
 
 # Create mount points and update fstab
 mkdir -p ${TARGET_DIR}/boot
-grep -qE "^/dev/mmcblk0p2  /boot" ${TARGET_DIR}/etc/fstab \
+grep -qE "^/dev/mmcblk0p1  /boot" ${TARGET_DIR}/etc/fstab \
 	|| echo "/dev/mmcblk0p1  /boot           vfat    defaults,noatime" \
 		>> ${TARGET_DIR}/etc/fstab
 mkdir -p ${TARGET_DIR}/home
-grep -qE "^/dev/mmcblk0p3  /home" ${TARGET_DIR}/etc/fstab \
-	|| echo "/dev/mmcblk0p3  /home           f2fs    defaults,noatime" \
-		>> ${TARGET_DIR}/etc/fstab

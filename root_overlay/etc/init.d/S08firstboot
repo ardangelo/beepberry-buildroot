@@ -3,33 +3,49 @@
 # First boot setup
 #
 
-umask 077
+HOME_PARTITION=/dev/mmcblk0p3
+HOME_OPTIONS=defaults,noatime
 
-set -e
+# Try to mount if not already mounted
+if [ ! -d /home/beepy ]; then
+	if ! [ output=$(/bin/mount -o $HOME_OPTIONS $HOME_PARTITION /home 2>&1); then
+		if echo "$output" | grep 'already mounted'; then
+			exit 0
+		fi
+	fi
+else
+	# Partition mounted, exit
+	exit 0
+fi
 
 # Check in boot partition for initialized flag
-if [ -f /boot/config.txt ] && [ ! -f /boot/home_partition_initialized ]; then
-	echo "Running first boot setup"
+echo "Running first boot setup" > /dev/console
 
-	echo "Creating home partition"
-	parted /dev/mmcblk0 resizepart 3 100%
-	mkfs.f2fs -f /dev/mmcblk0p3
-	mkdir -p /home
-	/bin/mount -o defaults,noatime /dev/mmcblk0p3 /home
-	echo "/dev/mmcblk0p3  /home           f2fs    defaults,noatime" >> /etc/fstab
+echo "Resizing home partition"
+parted -s /dev/mmcblk0 resizepart 3 100%
 
-	# Set up user directory
-	mkdir -p /home/beepy
-	sed -i 's|:/:|:/home/beepy:|g' /etc/passwd
-	cp /etc/skel/tmux.conf /home/beepy/.tmux.conf
-	cp /etc/skel/profile /home/beepy/.profile
-	chown -R beepy:beepy /home/beepy
+echo "Formatting home partition"
+mkfs.f2fs -f $HOME_PARTITION
 
-	# Mark set up
-	echo "Deleting this file will reformat the home partition on next boot" \
-		>> /boot/home_partition_initialized
-
-	echo "Completed first boot setup"
+echo "Mounting home partition"
+mkdir -p /home
+if ! /bin/mount -o $HOME_OPTIONS $HOME_PARTITION /home; then
+	echo "Failed to mount new home partition, exiting"
+	exit 1
 fi
+
+# Set up user directory
+echo "Setting up new user directory"
+mkdir -p /home/beepy
+sed -i 's|:/:|:/home/beepy:|g' /etc/passwd
+cp /etc/skel/tmux.conf /home/beepy/.tmux.conf
+cp /etc/skel/profile /home/beepy/.profile
+chown -R beepy:beepy /home/beepy
+
+# Add to fstab
+grep -qE "^$HOME_PARTITION" /etc/fstab \
+	|| echo "$HOME_PARTITION /home f2fs $HOME_OPTIONS" >> /etc/fstab
+
+echo "Completed first boot setup"
 
 exit 0
