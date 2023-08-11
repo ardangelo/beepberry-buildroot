@@ -8,16 +8,10 @@ For subsequent builds you can just run `make -j $(nproc)` from the `buildroot` d
 
 For the keyboard to work, you'll need to build and flash the firmware from this PR for now: https://github.com/sqfmi/i2c_puppet/pull/1
 
-## Extra: Configuring a WiFi network
+## Configuring a WiFi network
 
-Create a file at `root_overlay/var/lib/iwd/<SSID>.psk` with these contents:
+After flashing the SD image, configuration files added to `/boot/wlan` will be copied to the IWD directory. Edit the default file to configure a connection.
 
-```
-[Security]
-Passphrase=<passphrase>
-```
-
-Next time you build an SD card image, this network will be configured to auto-connect at boot.
 
 ## Extra: Connecting via SSH
 

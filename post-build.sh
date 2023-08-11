@@ -27,6 +27,15 @@ for script in $SCRIPTS; do
 	mv $script ${TARGET_INIT_D}/background/
 done
 
+# Add AP config line to iwd init script
+if [ -e ${TARGET_DIR}/etc/init.d/background/S40iwd ]; then
+	grep -qE '^mkdir -p /var/lib/iwd' ${TARGET_DIR}/etc/init.d/background/S40iwd || \
+		sed -i '/printf "Starting iwd:"/a\
+mkdir -p /var/lib/iwd; cp /boot/wlan/*.psk /var/lib/iwd/ 2>/dev/null || :' \
+			${TARGET_DIR}/etc/init.d/background/S40iwd
+fi
+
+
 # Create mount points and update fstab
 mkdir -p ${TARGET_DIR}/boot
 grep -qE "^/dev/mmcblk0p1  /boot" ${TARGET_DIR}/etc/fstab \
