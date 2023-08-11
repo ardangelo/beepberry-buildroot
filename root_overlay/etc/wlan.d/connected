@@ -1,0 +1,9 @@
+#!/bin/sh
+
+echo \^ > /etc/network/status
+/usr/libexec/tmux-refresh-status.sh
+
+/etc/init.d/background/S49ntp stop
+ntpd -q -n && sudo hwclock -w
+/etc/init.d/background/S49ntp start
+/usr/libexec/tmux-refresh-status.sh

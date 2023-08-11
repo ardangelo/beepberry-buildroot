@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo X > /etc/network/status
+/usr/libexec/tmux-refresh-status.sh
