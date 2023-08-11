@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBXAPIAN
+	bool "libxapian"
+	depends on BR2_LINUX_KERNEL
+	select BR2_PACKAGE_UTIL_LINUX
+	select BR2_PACKAGE_LIBUNWIND
+	select BR2_PACKAGE_LIBZLIB
+	help
+	  Search engine library

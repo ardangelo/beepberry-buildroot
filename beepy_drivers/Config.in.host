@@ -1,0 +1,2 @@
+source "$BR2_EXTERNAL_BEEPY_DRIVERS_PATH/package/libgc/Config.in.host"
+source "$BR2_EXTERNAL_BEEPY_DRIVERS_PATH/package/mktable/Config.in.host"

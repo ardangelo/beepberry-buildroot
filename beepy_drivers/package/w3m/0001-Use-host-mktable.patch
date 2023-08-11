@@ -1,0 +1,31 @@
+--- w3m-0.5.3+git20230121/Makefile.in	2023-08-10 11:52:31.580183697 -0500
++++ w3m-0.5.3+git20230121/Makefile.in	2023-08-10 11:53:16.512698452 -0500
+@@ -137,12 +137,12 @@
+ 
+ $(OBJS) $(LOBJS): fm.h funcname1.h
+ 
+-tagtable.c: tagtable.tab mktable$(EXT) html.h 
+-	./mktable$(EXT) 100 $(srcdir)/tagtable.tab > $@
++tagtable.c: tagtable.tab html.h
++	./mktable-host 100 $(srcdir)/tagtable.tab > $@
+ 
+-entity.h: entity.tab mktable$(EXT)
++entity.h: entity.tab
+ 	echo '/* $$I''d$$ */' > $@
+-	./mktable$(EXT) 100 $(srcdir)/entity.tab >> $@
++	./mktable-host 100 $(srcdir)/entity.tab >> $@
+ 
+ indep.o: indep.c fm.h funcname1.h entity.h
+ func.o: funcname.c functable.c funcname1.h
+@@ -173,9 +173,9 @@
+ funcname2.h: funcname.tab
+ 	sort funcname.tab | $(AWK) -f $(top_srcdir)/funcname2.awk > $@
+ 
+-functable.c: funcname.tab mktable$(EXT)
++functable.c: funcname.tab
+ 	sort funcname.tab | $(AWK) -f $(top_srcdir)/functable.awk > functable.tab
+-	./mktable$(EXT) 100 functable.tab > $@
++	./mktable-host 100 functable.tab > $@
+ 	-rm -f functable.tab
+ 
+ $(BOOKMARKER): w3mbookmark.o dummy.o $(ALIB)

@@ -1,0 +1,8 @@
+config BR2_PACKAGE_HOST_LIBGC
+	bool "host libgc"
+	default y
+	depends on !BR2_LINUX_KERNEL
+	select BR2_PACKAGE_HOST_LIBATOMIC_OPS
+	help
+	  Garbage collector library (host)
+

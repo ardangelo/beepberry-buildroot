@@ -1,0 +1,5 @@
+config BR2_PACKAGE_GMIME
+	bool "gmime"
+	depends on BR2_LINUX_KERNEL
+	help
+	  MIME type helper

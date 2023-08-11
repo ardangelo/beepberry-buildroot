@@ -1,0 +1,194 @@
+--- notmuch-0.37/configure	2022-08-21 15:21:40.000000000 -0500
++++ notmuch-0.37/configure	2023-08-10 17:29:21.954687787 -0500
+@@ -333,11 +333,7 @@
+     elif [ "${option}" = '--disable-dependency-tracking' ] ; then
+ 	true
+     else
+-	echo "Unrecognized option: ${option}"
+-	echo "See:"
+-	echo "	$0 --help"
+-	echo ""
+-	exit 1
++	echo "Ignoring unrecognized option: ${option}"
+     fi
+ done
+ 
+@@ -412,7 +408,7 @@
+ 
+ printf "C compiler supports address sanitizer... "
+ test_cmdline="${CC} ${CFLAGS} ${CPPFLAGS} -fsanitize=address minimal.c ${LDFLAGS} -o minimal"
+-if ${test_cmdline} >/dev/null 2>&1 && ./minimal
++if ${test_cmdline} >/dev/null 2>&1
+ then
+     printf "Yes.\n"
+     have_asan=1
+@@ -423,33 +419,10 @@
+ unset test_cmdline
+ 
+ printf "Reading libnotmuch version from source... "
+-cat > _libversion.c <<EOF
+-#include <stdio.h>
+-#include "lib/notmuch.h"
+-int main(void) {
+-    printf("libnotmuch_version_major=%d\n",
+-		LIBNOTMUCH_MAJOR_VERSION);
+-    printf("libnotmuch_version_minor=%d\n",
+-		LIBNOTMUCH_MINOR_VERSION);
+-    printf("libnotmuch_version_release=%d\n",
+-		LIBNOTMUCH_MICRO_VERSION);
+-    return 0;
+-}
+-EOF
+-if ${CC} ${CFLAGS} -I"$srcdir" _libversion.c -o _libversion > /dev/null 2>&1 \
+-       && ./_libversion > _libversion.sh && . ./_libversion.sh
+-then
+-    printf "OK.\n"
+-else
+-    cat <<EOF
+-
+-*** Error: Reading lib/notmuch.h failed.
+-Please try running configure again in a clean environment, and if the
+-problem persists, report a bug.
+-EOF
+-    rm -f _libversion _libversion.c _libversion.sh
+-    exit 1
+-fi
++libnotmuch_version_major=$(cat $srcdir/lib/notmuch.h | grep '#define LIBNOTMUCH_MAJOR_VERSION' | tr -s '[:blank:]' ' ' | cut -d ' ' -f 3)
++libnotmuch_version_minor=$(cat $srcdir/lib/notmuch.h | grep '#define LIBNOTMUCH_MINOR_VERSION' | tr -s '[:blank:]' ' ' | cut -d ' ' -f 3)
++libnotmuch_version_release=$(cat $srcdir/lib/notmuch.h | grep '#define LIBNOTMUCH_MICRO_VERSION' | tr -s '[:blank:]' ' ' | cut -d ' ' -f 3)
++printf "OK.\n"
+ 
+ if pkg-config --version > /dev/null 2>&1; then
+     have_pkg_config=1
+@@ -477,7 +450,7 @@
+     fi
+ done
+ if [ ${have_xapian} = "0" ]; then
+-    printf "No.\n"
++    printf "Fail.\n"
+     errors=$((errors + 1))
+ fi
+ 
+@@ -490,6 +463,9 @@
+     gmime_cflags=$(pkg-config --cflags gmime-3.0)
+     gmime_ldflags=$(pkg-config --libs gmime-3.0)
+ 
++	# Disable key checks for buildroot
++	if false; then
++
+     printf "Checking for GMime session key extraction support... "
+ 
+     cat > _check_session_keys.c <<EOF
+@@ -522,7 +498,7 @@
+ }
+ EOF
+     if ! TEMP_GPG=$(mktemp -d "${TMPDIR:-/tmp}/notmuch.XXXXXX"); then
+-	printf 'No.\nCould not make tempdir for testing session-key support.\n'
++	printf 'Fail.\nCould not make tempdir for testing session-key support.\n'
+ 	errors=$((errors + 1))
+     elif ${CC} ${CFLAGS} ${gmime_cflags} _check_session_keys.c ${gmime_ldflags} -o _check_session_keys \
+ 	   && GNUPGHOME=${TEMP_GPG} gpg --batch --quiet --import < "$srcdir"/test/gnupg-secret-key.asc \
+@@ -544,7 +520,7 @@
+ 	if command -v gpgme-config >/dev/null; then
+ 	    printf 'Your current GPGME development version is: %s\n' "$(gpgme-config --version)"
+ 	else
+-	    printf 'You do not have the GPGME development libraries installed.\n'
++	    printf 'Fail. You do not have the GPGME development libraries installed.\n'
+ 	fi
+ 	errors=$((errors + 1))
+     fi
+@@ -602,7 +578,7 @@
+     printf "Checking for GMime X.509 certificate validity... "
+ 
+     if ! TEMP_GPG=$(mktemp -d "${TMPDIR:-/tmp}/notmuch.XXXXXX"); then
+-	printf 'No.\nCould not make tempdir for testing X.509 certificate validity support.\n'
++	printf 'Fail.\nCould not make tempdir for testing X.509 certificate validity support.\n'
+ 	errors=$((errors + 1))
+     elif ${CC} -DCHECK_VALIDITY ${CFLAGS} ${gmime_cflags} _check_gmime_cert.c ${gmime_ldflags} -o _check_x509_validity \
+ 	    && echo disable-crl-checks > "$TEMP_GPG/gpgsm.conf" \
+@@ -614,7 +590,7 @@
+ 	    printf "Yes.\n"
+ 	else
+ 	    gmime_x509_cert_validity=0
+-	    printf "No.\n"
++	    printf "Fail.\n"
+ 	    if pkg-config --exists "gmime-3.0 >= 3.2.7"; then
+ 		cat <<EOF
+ *** Error: GMime fails to calculate X.509 certificate validity, and
+@@ -636,7 +612,7 @@
+ 	    printf "Yes.\n"
+ 	fi
+     else
+-	printf 'No.\nFailed to set up gpgsm for testing X.509 certificate validity support.\n'
++	printf 'Fail.\nFailed to set up gpgsm for testing X.509 certificate validity support.\n'
+ 	errors=$((errors + 1))
+     fi
+     if [ -n "$TEMP_GPG" -a -d "$TEMP_GPG" ]; then
+@@ -688,7 +664,7 @@
+ }
+ EOF
+     if ! TEMP_GPG=$(mktemp -d "${TMPDIR:-/tmp}/notmuch.XXXXXX"); then
+-	printf 'No.\nCould not make tempdir for testing signature verification when decrypting with session keys.\n'
++	printf 'Fail.\nCould not make tempdir for testing signature verification when decrypting with session keys.\n'
+ 	errors=$((errors + 1))
+     elif ${CC} ${CFLAGS} ${gmime_cflags} _verify_sig_with_session_key.c ${gmime_ldflags} -o _verify_sig_with_session_key \
+ 	    && GNUPGHOME=${TEMP_GPG} gpg --batch --quiet --import < "$srcdir"/test/gnupg-secret-key.asc \
+@@ -708,15 +684,20 @@
+ EOF
+ 	fi
+     else
+-	printf 'No.\nFailed to set up gpg for testing signature verification while decrypting with a session key.\n'
++	printf 'Fail.\nFailed to set up gpg for testing signature verification while decrypting with a session key.\n'
+ 	errors=$((errors + 1))
+     fi
+     if [ -n "$TEMP_GPG" -a -d "$TEMP_GPG" ]; then
+ 	rm -rf "$TEMP_GPG"
+     fi
++
++	else
++	echo "Buildroot: skipping X509 key checks"
++	gmime_x509_cert_validity=1
++	fi
+ else
+     have_gmime=0
+-    printf "No.\n"
++    printf "Fail.\n"
+     errors=$((errors + 1))
+ fi
+ 
+@@ -731,7 +712,7 @@
+     # glib_cflags=$(pkg-config --cflags glib-2.0)
+     # glib_ldflags=$(pkg-config --libs glib-2.0)
+ else
+-    printf "No.\n"
++    printf "Fail.\n"
+     errors=$((errors + 1))
+ fi
+ 
+@@ -751,7 +732,7 @@
+     zlib_cflags=$(pkg-config --cflags zlib)
+     zlib_ldflags=$(pkg-config --libs zlib)
+ else
+-    printf "No.\n"
++    printf "Fail.\n"
+     errors=$((errors + 1))
+ fi
+ 
+@@ -762,7 +743,7 @@
+     talloc_cflags=$(pkg-config --cflags talloc)
+     talloc_ldflags=$(pkg-config --libs talloc)
+ else
+-    printf "No.\n"
++    printf "Fail.\n"
+     have_talloc=0
+     talloc_cflags=
+     errors=$((errors + 1))
+@@ -803,7 +784,7 @@
+ done
+ 
+ if [ $have_python -eq 0 ]; then
+-    printf "No.\n"
++    printf "Fail.\n"
+     errors=$((errors + 1))
+ fi
+

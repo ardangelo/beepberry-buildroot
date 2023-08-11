@@ -1,0 +1,11 @@
+--- gmime-3.2.13/gmime/Makefile.am	2022-06-04 11:35:07.000000000 -0500
++++ gmime-3.2.13/gmime/Makefile.am	2023-08-10 14:14:34.172592294 -0500
+@@ -13,7 +13,7 @@
+ 	$(GMIME_CFLAGS)			\
+ 	$(GLIB_CFLAGS)
+ 
+-noinst_PROGRAMS = gen-table charset-map
++noinst_PROGRAMS = gen-table
+ 
+ EXTRA_DIST = gmime-version.h.in gmime-version.h
+ 

@@ -1,0 +1,7 @@
+config BR2_PACKAGE_LIBGC
+	bool "libgc"
+	default y
+	depends on BR2_LINUX_KERNEL
+	select BR2_PACKAGE_LIBATOMIC_OPS
+	help
+	  Garbage collector library

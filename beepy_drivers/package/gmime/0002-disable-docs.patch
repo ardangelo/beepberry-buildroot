@@ -1,0 +1,25 @@
+--- gmime-3.2.13/Makefile.am	2022-03-23 15:53:10.000000000 -0500
++++ gmime-3.2.13/Makefile.am 	2023-08-10 14:14:27.904518314 -0500
+@@ -2,11 +2,7 @@
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ 
+-SUBDIRS = m4 build util gmime tests docs
+-
+-if !PLATFORM_WIN32
+-SUBDIRS += examples
+-endif
++SUBDIRS = m4 build util gmime
+ 
+ SUBDIRS += tools .
+ 
+@@ -21,8 +17,7 @@
+ 	gmime.pc.in			\
+ 	gmime.spec.in 			\
+ 	iconv-detect.c			\
+-	zentimer.h 			\
+-	gtk-doc.make
++	zentimer.h
+ 
+ BUILD_EXTRA_DIST = 			\
+ 	gmime.spec

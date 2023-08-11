@@ -1,0 +1,11 @@
+config BR2_PACKAGE_W3M
+	bool "w3m"
+	depends on BR2_LINUX_KERNEL
+	select BR2_PACKAGE_OPENSSL
+	select BR2_PACKAGE_GPM
+	select BR2_PACKAGE_NCURSES
+	select BR2_PACKAGE_LIBGC
+	select BR2_PACKAGE_HOST_LIBGC
+	select BR2_PACKAGE_HOST_MKTABLE
+	help
+	  W3M browser

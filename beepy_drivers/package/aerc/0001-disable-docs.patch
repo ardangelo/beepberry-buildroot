@@ -1,0 +1,57 @@
+--- aerc-0.5.2/Makefile	2023-08-10 19:44:01.671466777 -0500
++++ aerc-0.5.2/Makefile	2023-08-10 19:44:49.104097251 -0500
+@@ -53,7 +53,7 @@
+ 
+ doc: $(DOCS)
+ 
+-all: aerc aerc.conf doc
++all: aerc aerc.conf
+ 
+ # Exists in GNUMake but not in NetBSD make and others.
+ RM?=rm -f
+@@ -62,20 +62,9 @@
+ 	$(RM) $(DOCS) aerc.conf aerc
+ 
+ install: all
+-	mkdir -m755 -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1 $(DESTDIR)$(MANDIR)/man5 $(DESTDIR)$(MANDIR)/man7 \
++	mkdir -m755 -p $(DESTDIR)$(BINDIR) \
+ 		$(DESTDIR)$(SHAREDIR) $(DESTDIR)$(SHAREDIR)/filters $(DESTDIR)$(SHAREDIR)/templates $(DESTDIR)$(SHAREDIR)/stylesets
+ 	install -m755 aerc $(DESTDIR)$(BINDIR)/aerc
+-	install -m644 aerc.1 $(DESTDIR)$(MANDIR)/man1/aerc.1
+-	install -m644 aerc-search.1 $(DESTDIR)$(MANDIR)/man1/aerc-search.1
+-	install -m644 aerc-config.5 $(DESTDIR)$(MANDIR)/man5/aerc-config.5
+-	install -m644 aerc-imap.5 $(DESTDIR)$(MANDIR)/man5/aerc-imap.5
+-	install -m644 aerc-maildir.5 $(DESTDIR)$(MANDIR)/man5/aerc-maildir.5
+-	install -m644 aerc-sendmail.5 $(DESTDIR)$(MANDIR)/man5/aerc-sendmail.5
+-	install -m644 aerc-notmuch.5 $(DESTDIR)$(MANDIR)/man5/aerc-notmuch.5
+-	install -m644 aerc-smtp.5 $(DESTDIR)$(MANDIR)/man5/aerc-smtp.5
+-	install -m644 aerc-tutorial.7 $(DESTDIR)$(MANDIR)/man7/aerc-tutorial.7
+-	install -m644 aerc-templates.7 $(DESTDIR)$(MANDIR)/man7/aerc-templates.7
+-	install -m644 aerc-stylesets.7 $(DESTDIR)$(MANDIR)/man7/aerc-stylesets.7
+ 	install -m644 config/accounts.conf $(DESTDIR)$(SHAREDIR)/accounts.conf
+ 	install -m644 aerc.conf $(DESTDIR)$(SHAREDIR)/aerc.conf
+ 	install -m644 config/binds.conf $(DESTDIR)$(SHAREDIR)/binds.conf
+@@ -93,23 +82,8 @@
+ 
+ uninstall:
+ 	$(RM) $(DESTDIR)$(BINDIR)/aerc
+-	$(RM) $(DESTDIR)$(MANDIR)/man1/aerc.1
+-	$(RM) $(DESTDIR)$(MANDIR)/man1/aerc-search.1
+-	$(RM) $(DESTDIR)$(MANDIR)/man5/aerc-config.5
+-	$(RM) $(DESTDIR)$(MANDIR)/man5/aerc-imap.5
+-	$(RM) $(DESTDIR)$(MANDIR)/man5/aerc-maildir.5
+-	$(RM) $(DESTDIR)$(MANDIR)/man5/aerc-sendmail.5
+-	$(RM) $(DESTDIR)$(MANDIR)/man5/aerc-notmuch.5
+-	$(RM) $(DESTDIR)$(MANDIR)/man5/aerc-smtp.5
+-	$(RM) $(DESTDIR)$(MANDIR)/man7/aerc-tutorial.7
+-	$(RM) $(DESTDIR)$(MANDIR)/man7/aerc-templates.7
+-	$(RM) $(DESTDIR)$(MANDIR)/man7/aerc-stylesets.7
+ 	$(RM) -r $(DESTDIR)$(SHAREDIR)
+ 	${RMDIR_IF_EMPTY} $(DESTDIR)$(BINDIR)
+-	$(RMDIR_IF_EMPTY) $(DESTDIR)$(MANDIR)/man1
+-	$(RMDIR_IF_EMPTY) $(DESTDIR)$(MANDIR)/man5
+-	$(RMDIR_IF_EMPTY) $(DESTDIR)$(MANDIR)/man7
+-	$(RMDIR_IF_EMPTY) $(DESTDIR)$(MANDIR)
+ 
+ .DEFAULT_GOAL := all
+ 

@@ -1,0 +1,5 @@
+config BR2_PACKAGE_HOST_MKTABLE
+	bool "host mktable"
+	select BR2_PACKAGE_HOST_LIBATOMIC_OPS
+	help
+	  W3M mktable tool
