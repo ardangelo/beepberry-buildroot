@@ -1,5 +1,5 @@
-source "$BR2_EXTERNAL_BEEPY_DRIVERS_PATH/package/sharp/Config.in"
-source "$BR2_EXTERNAL_BEEPY_DRIVERS_PATH/package/bbqX0kbd/Config.in"
+source "$BR2_EXTERNAL_BEEPY_DRIVERS_PATH/package/sharp-drm/Config.in"
+source "$BR2_EXTERNAL_BEEPY_DRIVERS_PATH/package/beepy-kbd/Config.in"
 source "$BR2_EXTERNAL_BEEPY_DRIVERS_PATH/package/libgc/Config.in"
 source "$BR2_EXTERNAL_BEEPY_DRIVERS_PATH/package/w3m/Config.in"
 source "$BR2_EXTERNAL_BEEPY_DRIVERS_PATH/package/libxapian/Config.in"
