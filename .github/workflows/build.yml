@@ -1,0 +1,27 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install packages
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade
+        sudo apt-get install -y make gcc g++ unzip git bc python device-tree-compiler mtd-utils
+    - name: Build image
+      run: |
+        ./build-image.sh
+    - name : Upload image
+      uses: actions/upload-artifact@v3
+      with:
+        name: sdcard.img
+        path: buildroot/output/images/sdcard.img
+
