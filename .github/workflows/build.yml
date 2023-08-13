@@ -11,10 +11,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        submodules: True
     - name: Install packages
       run: |
         sudo apt-get update
-        sudo apt-get upgrade
         sudo apt-get install -y make gcc g++ unzip git bc python device-tree-compiler mtd-utils
     - name: Build image
       run: |
