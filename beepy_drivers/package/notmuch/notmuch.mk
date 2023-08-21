@@ -9,6 +9,11 @@ NOTMUCH_INSTALL_STAGING=yes
 NOTMUCH_CONF_ENV = \
 	XAPIAN_CONFIG=$(STAGING_DIR)/usr/bin/xapian-config
 
+NOTMUCH_CONF_OPTS = \
+	--with-ruby=no \
+	--with-emacs=no \
+	--with-desktop=no
+
 NOTMUCH_MAKE_OPTS = \
 	CPPFLAGS=-I$(STAGING_DIR)/usr/include \
 	LDFLAGS=-L$(STAGING_DIR)/usr/lib
