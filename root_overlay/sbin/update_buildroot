@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -e
+
+IMG_SOURCE=https://github.com/ardangelo/beepberry-buildroot/releases\
+/latest/download/sdcard.img.zip
+IMG_DEST=/home/sdcard.img
+BASE=/update
+
+function cleanup() {
+	echo "Cleaning up..."
+	umount $BASE 2>/dev/null || :
+	rmdir $BASE 2>/dev/null || :
+	rm -f $IMG_DEST $IMG_DEST.zip
+}
+trap cleanup EXIT
+
+echo "This updater script will replace system binaries and libraries with updated"
+echo "versions from the latest Github release. Recommended to back up any data"
+echo "in your home directory. Please do not turn off or unplug your device until"
+echo "the update has completed. It will reboot automatically."
+read -p "Continue? [y/N]" -n 1 -r
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+	[[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+fi
+
+# Get the latest release
+wget $IMG_SOURCE -O $IMG_DEST.zip
+
+# Extract image
+unzip $IMG_DEST.zip -d $(dirname $IMG_DEST)
+
+# Get offset to root partition
+IMG_SPEC=$(fdisk -l $IMG_DEST | tr -s ' ')
+UNITS=$(grep 'Units: ' <<< "$IMG_SPEC" | cut -d '=' -f 2 | cut -d ' ' -f 2)
+ROOT_LBA=$(grep Linux <<< "$IMG_SPEC" | head -n 1 | tr -s ' ' | cut -d ' ' -f 4)
+ROOT_OFFSET=$(( $UNITS * $ROOT_LBA ))
+
+# Mount root partition
+mkdir -p $BASE
+mount -o loop,offset=$ROOT_OFFSET $IMG_DEST $BASE
+
+# Sync updates
+for dir in /bin /etc/init.d /etc/wlan.d /etc/udev /lib /opt /sbin /usr /var; do
+	rsync -avx -T /tmp $BASE/$dir/ $dir/
+done
+
+echo "Update completed successfully!"
+cleanup
+echo "Rebooting..."
+reboot
