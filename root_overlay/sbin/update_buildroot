@@ -40,10 +40,8 @@ ROOT_OFFSET=$(( $UNITS * $ROOT_LBA ))
 mkdir -p $BASE
 mount -o loop,offset=$ROOT_OFFSET $IMG_DEST $BASE
 
-# Sync updates
-for dir in /bin /etc/init.d /etc/wlan.d /etc/udev /lib /opt /sbin /usr /var; do
-	rsync -avx -T /tmp $BASE/$dir/ $dir/
-done
+# Sync root partition
+rsync -avx -T /tmp --exclude /boot --exclude /home $BASE/ /
 
 echo "Update completed successfully!"
 cleanup
