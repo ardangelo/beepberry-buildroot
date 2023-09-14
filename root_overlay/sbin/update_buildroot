@@ -41,7 +41,8 @@ mkdir -p $BASE
 mount -o loop,offset=$ROOT_OFFSET $IMG_DEST $BASE
 
 # Sync root partition
-rsync -avx -T /tmp --exclude /boot --exclude /home $BASE/ /
+rsync -avx -T /tmp --exclude /boot --exclude /home --exclude /dev \
+	--exclude /etc/passwd --exclude /etc/fstab $BASE/ /
 
 echo "Update completed successfully!"
 cleanup
