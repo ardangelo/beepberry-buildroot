@@ -19,6 +19,14 @@ if [ -e ${TARGET_DIR}/etc/sudoers ]; then
 	fi
 fi
 
+# Add sgx group to /etc/group to silence boot error
+SGX_GROUP="sgx:x:528"
+if [-e ${TARGET_DIR}/etc/group ]; then
+        if ! grep -qx "${SGX_GROUP}" ${TARGET_DIR}/etc/group; then
+	        echo "${SGX_GROUP}" >> ${TARGET_DIR}/etc/group
+	fi
+fi
+
 # Move nonessential init scripts to background
 TARGET_INIT_D=${TARGET_DIR}/etc/init.d
 SCRIPTS=$(find ${TARGET_INIT_D} -type f -regex "${TARGET_INIT_D}/S[1-9].*")
