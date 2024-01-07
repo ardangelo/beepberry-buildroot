@@ -20,7 +20,7 @@ if [ -e ${TARGET_DIR}/etc/sudoers ]; then
 fi
 
 # Add sgx group to /etc/group to silence boot error
-SGX_GROUP="sgx:x:528"
+SGX_GROUP="sgx:x:528:"
 if [-e ${TARGET_DIR}/etc/group ]; then
         if ! grep -qx "${SGX_GROUP}" ${TARGET_DIR}/etc/group; then
 	        echo "${SGX_GROUP}" >> ${TARGET_DIR}/etc/group
