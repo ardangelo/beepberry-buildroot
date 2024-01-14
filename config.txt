@@ -9,6 +9,7 @@ initial_turbo=30
 disable_splash=1
 dtoverlay=miniuart-bt
 dtoverlay=krnbt=on
+enable_uart=1
 boot_delay=0
 dtoverlay=sharp-drm
 dtparam=spi=on
