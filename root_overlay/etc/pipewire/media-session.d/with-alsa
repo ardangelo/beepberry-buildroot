@@ -1,0 +1,5 @@
+# This file is part of Media Session 0.4.2
+#
+# Add this file to /etc/pipewire/media-session.d/
+# to load the corresponding module list in the in the media-session.conf
+# session.modules[<filename>] array.

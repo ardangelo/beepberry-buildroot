@@ -1,0 +1,77 @@
+#!/bin/sh
+
+DAEMONS="pipewire pipewire-session"
+
+
+PIDFILE="/var/run/$DAEMON.pid"
+
+# TODO put these somewhere less gross (or figure out how to ensure 
+# pipewire has them in its environment - /etc/default maybe?
+
+export XDG_RUNTIME_DIR=/run
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
+
+
+start() {
+	for DAEMON in pipewire pipewire-media-session ; do
+		printf 'Starting %s: ' "$DAEMON"
+		
+		[ -r "/etc/default/$DAEMON" ] && . "/etc/default/$DAEMON"
+
+		PIDFILE="/var/run/$DAEMON.pid"
+		export PIPEWIRE_LOG=/var/log/$DAEMON.log
+
+		start-stop-daemon -S -q -m -b -p "$PIDFILE" -x "/usr/bin/$DAEMON"
+
+		status=$?
+		if [ "$status" -eq 0 ]; then
+			echo "OK"
+		else
+			echo "FAIL"
+			return "$status"
+		fi
+
+		sleep 1
+
+	done
+	
+	return "$status"
+}
+
+stop() {
+
+	for DAEMON in pipewire-media-session pipewire ; do
+		printf 'Stopping %s: ' "$DAEMON"
+		
+		[ -r "/etc/default/$DAEMON" ] && . "/etc/default/$DAEMON"
+
+                PIDFILE="/var/run/$DAEMON.pid"
+
+		start-stop-daemon -K -q -p "$PIDFILE"
+
+	        status=$?
+		if [ "$status" -eq 0 ]; then
+                        echo "OK"
+                else
+                        echo "FAIL"
+                        return "$status"
+                fi	
+
+	done
+
+	return "$status"
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+	start|stop|restart)
+		"$1";;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
