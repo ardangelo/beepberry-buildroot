@@ -7,3 +7,6 @@
 	path = beepy_drivers/package/beepy-kbd/module
 	url = git@github.com:ardangelo/beepberry-keyboard-driver.git
 	branch = main
+[submodule "beepy_drivers/package/beepy-symbol-overlay/module"]
+	path = beepy_drivers/package/beepy-symbol-overlay/module
+	url = git@github.com:ardangelo/beepy-symbol-overlay.git

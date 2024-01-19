@@ -1,0 +1,7 @@
+config BR2_PACKAGE_BEEPY_SYMBOL_OVERLAY
+	bool "beepy-symbol-overlay"
+	default y
+	depends on BR2_LINUX_KERNEL
+	select BR2_PACKAGE_SHARP_DRM
+	help
+	  Symbol menu overlay
