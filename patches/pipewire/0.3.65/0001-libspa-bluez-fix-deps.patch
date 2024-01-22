@@ -1,0 +1,10 @@
+--- pipewire-0.3.65/spa/plugins/bluez5/meson.build	2023-01-26 00:55:03.000000000 -0800
++++ pipewire-0.3.65/spa/plugins/bluez5/meson.build.new	2024-01-17 09:38:29.880998960 -0800
+@@ -1,6 +1,6 @@
+ gnome = import('gnome')
+ 
+-bluez5_deps = [ mathlib, dbus_dep, glib2_dep, sbc_dep, bluez_dep, gio_dep, gio_unix_dep ]
++bluez5_deps = [ mathlib, dbus_dep, sbc_dep, bluez_dep, gio_dep, gio_unix_dep ]
+ foreach dep: bluez5_deps
+   if not dep.found()
+     subdir_done()

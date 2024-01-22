@@ -37,6 +37,7 @@ fi
 # Set up user directory
 echo "Setting up new user directory"
 mkdir -p /home/beepy
+mkdir -p /home/beepy/.run
 sed -i 's|:/:|:/home/beepy:|g' /etc/passwd
 cp /etc/skel/tmux.conf /home/beepy/.tmux.conf
 cp /etc/skel/profile /home/beepy/.profile

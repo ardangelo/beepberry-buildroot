@@ -35,6 +35,13 @@ for script in $SCRIPTS; do
 	mv $script ${TARGET_INIT_D}/background/
 done
 
+# Update dbus launch script to create /run/dbus with the proper pemissions
+# to allow user daemons (e.g. pipewire) to connect
+if [ -e ${TARGET_DIR}/etc/init.d/background/S30dbus ]; then
+        grep -qE '^\[ -d /run/dbus \] \|\| mkdir -p -m 0755 /run/dbus' ${TARGET_DIR}/etc/init.d/background/S30dbus || \
+        sed -i 's/mkdir -p \/run\/dbus/mkdir -p -m 0755 \/run\/dbus/' ${TARGET_DIR}/etc/init.d/background/S30dbus
+fi
+
 # Add AP config line to iwd init script
 if [ -e ${TARGET_DIR}/etc/init.d/background/S40iwd ]; then
 	grep -qE '^mkdir -p /var/lib/iwd' ${TARGET_DIR}/etc/init.d/background/S40iwd || \
@@ -42,7 +49,6 @@ if [ -e ${TARGET_DIR}/etc/init.d/background/S40iwd ]; then
 mkdir -p /var/lib/iwd; cp /boot/wlan/*.psk /var/lib/iwd/ 2>/dev/null || :' \
 			${TARGET_DIR}/etc/init.d/background/S40iwd
 fi
-
 
 # Create mount points and update fstab
 mkdir -p ${TARGET_DIR}/boot
