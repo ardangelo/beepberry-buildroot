@@ -1,15 +1,22 @@
 #!/bin/sh
 
+###
+# This one's a bit odd. We want to run this as our non-root user,
+# because if pipewire is run as root, we won't be able to connect
+# to the (root-owned) socket. So we use start-stop-daemon to run
+# the daemons as our non-root user and keep state in the user's
+# home directory.
+
 DAEMONS="pipewire pipewire-session"
 
-
-PIDFILE="/var/run/$DAEMON.pid"
+USER=beepy
 
 # TODO put these somewhere less gross (or figure out how to ensure 
 # pipewire has them in its environment - /etc/default maybe?
 
-export XDG_RUNTIME_DIR=/run
+export PIPEWIRE_RUNTIME_DIR=/home/$USER/.run
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
+
 
 
 start() {
@@ -18,10 +25,10 @@ start() {
 		
 		[ -r "/etc/default/$DAEMON" ] && . "/etc/default/$DAEMON"
 
-		PIDFILE="/var/run/$DAEMON.pid"
+		PIDFILE="$PIPEWIRE_RUNTIME_DIR/$DAEMON.pid"
 		export PIPEWIRE_LOG=/var/log/$DAEMON.log
 
-		start-stop-daemon -S -q -m -b -p "$PIDFILE" -x "/usr/bin/$DAEMON"
+		start-stop-daemon -S -q -m -b -c $USER -p "$PIDFILE" -x "/usr/bin/$DAEMON"
 
 		status=$?
 		if [ "$status" -eq 0 ]; then
@@ -45,13 +52,14 @@ stop() {
 		
 		[ -r "/etc/default/$DAEMON" ] && . "/etc/default/$DAEMON"
 
-                PIDFILE="/var/run/$DAEMON.pid"
+                PIDFILE="$PIPEWIRE_RUNTIME_DIR/$DAEMON.pid"
 
 		start-stop-daemon -K -q -p "$PIDFILE"
 
 	        status=$?
 		if [ "$status" -eq 0 ]; then
                         echo "OK"
+			rm -f $PIDFILE
                 else
                         echo "FAIL"
                         return "$status"
