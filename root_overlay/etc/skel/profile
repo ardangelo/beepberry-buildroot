@@ -1,5 +1,9 @@
+export PIPEWIRE_RUNTIME_DIR=~/.run
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
+
 echo 0 | sudo tee /sys/devices/virtual/graphics/fbcon/cursor_blink > /dev/null
 tput cvvis
 if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
 	exec tmux
 fi
+
