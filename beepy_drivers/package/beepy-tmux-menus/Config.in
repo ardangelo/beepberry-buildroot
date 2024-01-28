@@ -1,0 +1,7 @@
+config BR2_PACKAGE_BEEPY_TMUX_MENUS
+	bool "beepy-tmux-menus"
+	default y
+	depends on BR2_LINUX_KERNEL
+	select BR2_PACKAGE_TMUX
+	help
+	  Beepy-customized tmux-menus
