@@ -21,7 +21,7 @@ fi
 
 # Add sgx group to /etc/group to silence boot error
 SGX_GROUP="sgx:x:528:"
-if [-e ${TARGET_DIR}/etc/group ]; then
+if [ -e ${TARGET_DIR}/etc/group ]; then
         if ! grep -qx "${SGX_GROUP}" ${TARGET_DIR}/etc/group; then
 	        echo "${SGX_GROUP}" >> ${TARGET_DIR}/etc/group
 	fi
@@ -50,3 +50,11 @@ grep -qE "^/dev/mmcblk0p1  /boot" ${TARGET_DIR}/etc/fstab \
 	|| echo "/dev/mmcblk0p1  /boot           vfat    defaults,noatime" \
 		>> ${TARGET_DIR}/etc/fstab
 mkdir -p ${TARGET_DIR}/home
+
+# Fix direct symbol input by disabling convert-meta in libreadline config
+if grep -qE '^# set convert-meta off$' ${TARGET_DIR}/etc/inputrc; then
+	sed -i 's/^# set convert-meta off$/set convert-meta off/' \
+		${TARGET_DIR}/etc/inputrc
+elif ! grep -qE '^set convert-meta off$' ${TARGET_DIR}/etc/inputrc; then
+	echo 'set convert-meta off' >> ${TARGET_DIR}/etc/inputrc
+fi
