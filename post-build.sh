@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -u
 set -e
@@ -64,3 +64,18 @@ if grep -qE '^# set convert-meta off$' ${TARGET_DIR}/etc/inputrc; then
 elif ! grep -qE '^set convert-meta off$' ${TARGET_DIR}/etc/inputrc; then
 	echo 'set convert-meta off' >> ${TARGET_DIR}/etc/inputrc
 fi
+
+# Pip requires source files to be available, Buildroot only installs pyc
+for python_dir in ${TARGET_DIR}/usr/lib/python3.*; do
+	if [ -d $python_dir/site-packages/pip ]; then
+
+		for pip_dir in ${BUILD_DIR}/python-pip-*; do
+			if [ -d $pip_dir/src/pip ]; then
+				pushd $pip_dir/src/pip
+				find . -type f -name \*.py -exec \
+					install -D {} $python_dir/site-packages/pip/{} \;
+				popd
+			fi
+		done
+	fi
+done

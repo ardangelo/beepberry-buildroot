@@ -6,7 +6,7 @@
 umask 077
 
 start() {
-	/sbin/modprobe sharp-drm
+	/sbin/modprobe sharp-drm mono_cutoff=64
 	echo "OK"
 }
 stop() {
