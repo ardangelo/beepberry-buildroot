@@ -5,7 +5,7 @@ AERC_SITE = https://git.sr.ht/~rjarry/aerc/archive
 AERC_DEPENDENCIES = host-go notmuch
 
 define AERC_BUILD_CMDS
-	GOOS=linux GOARCH=arm GOFLAGS="-tags=notmuch -buildvcs=false" CGO_ENABLED=1 \
+	GOPROXY=https://proxy.golang.org GOOS=linux GOARCH=arm GOFLAGS="-tags=notmuch -buildvcs=false" CGO_ENABLED=1 \
 		$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)
 endef
 
