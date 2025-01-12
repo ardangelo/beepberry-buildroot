@@ -1,0 +1,35 @@
+From 674782a4db43b873a3945eaeea9a078b7842708a Mon Sep 17 00:00:00 2001
+From: Andrew D'Angelo <dangeloandrew@outlook.com>
+Date: Sat, 11 Jan 2025 18:07:12 -0600
+Subject: [PATCH] Don't remove sdl2-config
+
+---
+ package/sdl2/sdl2.mk | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/package/sdl2/sdl2.mk b/package/sdl2/sdl2.mk
+index eb5042e..d790682 100644
+--- a/package/sdl2/sdl2.mk
++++ b/package/sdl2/sdl2.mk
+@@ -12,7 +12,6 @@ SDL2_LICENSE_FILES = LICENSE.txt
+ SDL2_CPE_ID_VENDOR = libsdl
+ SDL2_CPE_ID_PRODUCT = simple_directmedia_layer
+ SDL2_INSTALL_STAGING = YES
+-SDL2_CONFIG_SCRIPTS = sdl2-config
+ 
+ SDL2_CONF_OPTS += \
+ 	--disable-rpath \
+@@ -171,4 +170,10 @@ else
+ SDL2_CONF_OPTS += --disable-video-kmsdrm
+ endif
+ 
++define SDL2_FIX_SDL2_CONFIG
++	$(SED) 's|-I/[^ ]*/sysroot/usr/include|-I/usr/include|g' \
++		$(TARGET_DIR)/usr/bin/sdl2-config
++endef
++SDL2_POST_INSTALL_TARGET_HOOKS += SDL2_FIX_SDL2_CONFIG
++
+ $(eval $(autotools-package))
+-- 
+2.39.5
+

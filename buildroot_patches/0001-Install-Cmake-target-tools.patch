@@ -1,0 +1,34 @@
+From 5d9601f0b7ee71ed5493cb375bd821e8b604d785 Mon Sep 17 00:00:00 2001
+From: Andrew D'Angelo <dangeloandrew@outlook.com>
+Date: Sat, 11 Jan 2025 17:16:09 -0600
+Subject: [PATCH] Install Cmake target tools
+
+---
+ package/cmake/cmake.mk | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/package/cmake/cmake.mk b/package/cmake/cmake.mk
+index 23d00b9..abc6f0d 100644
+--- a/package/cmake/cmake.mk
++++ b/package/cmake/cmake.mk
+@@ -34,7 +34,8 @@ CMAKE_CONF_OPTS = \
+ 	-DCMAKE_USE_SYSTEM_LIBRARIES=1 \
+ 	-DCTEST_USE_XMLRPC=OFF \
+ 	-DCMake_ENABLE_DEBUGGER=0 \
+-	-DBUILD_CursesDialog=OFF
++	-DBUILD_CursesDialog=OFF \
++	-DCMAKE_NO_SYSTEM_FROM_IMPORTED=1
+ 
+ # Get rid of -I* options from $(HOST_CPPFLAGS) to prevent that a
+ # header available in $(HOST_DIR)/include is used instead of a
+@@ -82,7 +83,6 @@ define CMAKE_INSTALL_CTEST_CFG_FILE
+ 		$(TARGET_DIR)/usr/share/cmake-$(CMAKE_VERSION_MAJOR)/Modules/CMake.cmake.ctest
+ endef
+ 
+-CMAKE_POST_INSTALL_TARGET_HOOKS += CMAKE_REMOVE_EXTRA_DATA
+ CMAKE_POST_INSTALL_TARGET_HOOKS += CMAKE_INSTALL_CTEST_CFG_FILE
+ 
+ define CMAKE_INSTALL_TARGET_CMDS
+-- 
+2.39.5
+

@@ -6,6 +6,13 @@ set -e
 if [ ! -d buildroot ]; then
 curl https://buildroot.org/downloads/buildroot-2024.02.tar.xz | tar xJ
 mv buildroot-* buildroot
+
+pushd buildroot
+git apply ../patches/0001-Add-GCC-target-package.patch
+git apply ../patches/0001-Don-t-remove-sdl2-config.patch
+git apply ../patches/0001-Install-Cmake-target-tools.patch
+popd
+
 fi
 
 # `make linux-savedefconfig` to save defconfig
